@@ -1,0 +1,30 @@
+node("x86_runner1"){
+    stage('*** Cleanup***') {
+        cleanWs()
+    }
+    stage('*** Check out SCM ***') { 
+        dir('go') {
+            git branch: 'master', url: 'https://go.googlesource.com/go'
+        }
+    } 
+    stage('*** Compilation Phase ***') { 
+        sh '''#!/bin/bash
+            pwd
+            wget https://go.dev/dl/go1.21.3.linux-amd64.tar.gz
+            mkdir go1.21.3
+            tar -C $PWD/go1.21.3 -xzf go1.21.3.linux-amd64.tar.gz
+            ls
+            ls go
+            export PATH=$PATH:$PWD/go1.21.3/go/bin
+            go version
+            cd go/src
+            GOOS=linux GOARCH=riscv64 ./bootstrap.bash
+         '''
+    }
+    stage (' *** Test ***'){
+        sh '''#!/bin/bash
+            ./go-linux-riscv64-bootstrap/bin/go version
+            ./go-linux-riscv64-bootstrap/bin/go run hello.go
+         '''
+    }
+}
