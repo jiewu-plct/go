@@ -25,8 +25,6 @@ node("x86_runner1"){
         sh '''#!/bin/bash
             ls
             ls go-linux-riscv64-bootstrap/bin
-            ./go-linux-riscv64-bootstrap/bin/go version
-            ./go-linux-riscv64-bootstrap/bin/go run hello.go
          '''
     }
 }
